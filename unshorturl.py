@@ -44,10 +44,10 @@ def unshorturl(shorturl: str):
         http.HTTPStatus.PERMANENT_REDIRECT,     # Status Code 308
     ]
 
-    session = requests.session()
-    response = session.head(shorturl)
-    if response.status_code in allowed_status:
-        return response.headers.get('Location')
+    with requests.session() as session:
+        response = session.head(shorturl)
+        if response.status_code in allowed_status:
+            return response.headers.get('Location')
     return "No short Url found"
 
 
