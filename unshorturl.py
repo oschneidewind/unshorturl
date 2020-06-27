@@ -34,14 +34,14 @@ def unshorturl(shorturl: str):
     shorturl -- the short url which should be checked.
     '''
     allowed_status = [
-        http.HTTPStatus.MULTIPLE_CHOICES,
-        http.HTTPStatus.MOVED_PERMANENTLY,
-        http.HTTPStatus.FOUND,
-        http.HTTPStatus.SEE_OTHER,
-        http.HTTPStatus.NOT_MODIFIED,
-        http.HTTPStatus.USE_PROXY,
-        http.HTTPStatus.TEMPORARY_REDIRECT,
-        http.HTTPStatus.PERMANENT_REDIRECT,
+        http.HTTPStatus.MULTIPLE_CHOICES,       # Status Code 300
+        http.HTTPStatus.MOVED_PERMANENTLY,      # Status Code 301
+        http.HTTPStatus.FOUND,                  # Status Code 302
+        http.HTTPStatus.SEE_OTHER,              # Status Code 303
+        http.HTTPStatus.NOT_MODIFIED,           # Status Code 304
+        http.HTTPStatus.USE_PROXY,              # Status Code 305
+        http.HTTPStatus.TEMPORARY_REDIRECT,     # Status Code 307
+        http.HTTPStatus.PERMANENT_REDIRECT,     # Status Code 308
     ]
 
     session = requests.session()
