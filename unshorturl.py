@@ -22,7 +22,7 @@ import sys
 import requests
 
 
-def unshorturl(shorturl: str):
+def unshorturl(shorturl: str, recursive: bool = False):
     '''
     Spam mails ofen contain urls which should be concealed with a shortner url
     service. Fortunately, most shortened URLs work by naming the correct URL as
@@ -31,7 +31,9 @@ def unshorturl(shorturl: str):
     then returning the long URL.
 
     Keyword arguments:
-    shorturl -- the short url which should be checked.
+    shorturl  -- the short url which should be checked.
+    recursive -- if this is set, the function follows all 30x answers until
+                 something else comes.
     '''
     allowed_status = [
         http.HTTPStatus.MULTIPLE_CHOICES,       # Status Code 300
@@ -44,11 +46,16 @@ def unshorturl(shorturl: str):
         http.HTTPStatus.PERMANENT_REDIRECT,     # Status Code 308
     ]
 
+    longurl = "No short Url found"
     with requests.session() as session:
         response = session.head(shorturl)
-        if response.status_code in allowed_status:
-            return response.headers.get('Location')
-    return "No short Url found"
+        if recursive:
+            while response.status_code in allowed_status:
+                longurl = response.headers.get('Location')
+                response = session.head(longurl)
+        elif response.status_code in allowed_status:
+            longurl = response.headers.get('Location')
+    return longurl
 
 
 def cmdparse(args=None):
@@ -56,9 +63,11 @@ def cmdparse(args=None):
     function to parse the command line options
     '''
     parser = argparse.ArgumentParser(
-        description='Simple script to get al long url from a shorturl')
+        description='Simple script to get a long url from a shorturl')
     parser.add_argument('-s', '--shorturl', type=str,
                         help='the shorturl to be examined with protocol (like http [s])')
+    parser.add_argument('-r', '--recursive', action='store_true',
+                        help='follow short urls recursively until the long url appears')
     return parser.parse_args(args)
 
 
@@ -69,7 +78,7 @@ if __name__ == "__main__":
     else:
         shorturl = input('please enter the short url: ')
     try:
-        longurl = unshorturl(shorturl)
+        longurl = unshorturl(shorturl, args.recursive)
         print(f'the longurl is: {longurl}')
     except requests.exceptions.MissingSchema:
         print(f'short url seams to be invalid {shorturl}')
