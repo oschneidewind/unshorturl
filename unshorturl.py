@@ -64,8 +64,8 @@ def cmdparse(args=None):
     '''
     parser = argparse.ArgumentParser(
         description='Simple script to get a long url from a shorturl')
-    parser.add_argument('-s', '--shorturl', type=str,
-                        help='the shorturl to be examined with protocol (like http [s])')
+    parser.add_argument('shorturl', type=str, nargs="?", default=None,
+                        help='the shorturl to be examined with protocol (like http[s])')
     parser.add_argument('-r', '--recursive', action='store_true',
                         help='follow short urls recursively until the long url appears')
     return parser.parse_args(args)
