@@ -73,7 +73,7 @@ def cmdparse(args=None):
     return parser.parse_args(args)
 
 
-if __name__ == "__main__":
+def main():
     args = cmdparse()
     if args.shorturl:
         shorturl = args.shorturl
@@ -86,3 +86,7 @@ if __name__ == "__main__":
         print(f'short url seams to be invalid {shorturl}')
     except ValueError:
         print(f"{shorturl} seams not to be a short url")
+
+
+if __name__ == "__main__":
+    main()
