@@ -18,6 +18,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import http
+import json
 import requests
 
 
@@ -67,6 +68,8 @@ def cmdparse(args=None):
         description='Simple script to get a long url from a shorturl')
     parser.add_argument('shorturl', type=str, nargs="?", default=None,
                         help='the shorturl to be examined with protocol (like http[s])')
+    parser.add_argument('-j', '--json', action='store_true',
+                        help='print result as json')
     parser.add_argument('-r', '--recursive', action='store_true',
                         help='follow short urls recursively until the long url appears')
     return parser.parse_args(args)
@@ -80,7 +83,11 @@ def main():
         shorturl = input('please enter the short url: ')
     try:
         longurl = unshorturl(shorturl, args.recursive)
-        print(f'the longurl is: {longurl}')
+        if args.json:
+            result = {"shorturl": shorturl, "longurl": longurl}
+            print(json.dumps(result, indent=4, sort_keys=True))
+        else:
+            print(f'the longurl is: {longurl}')
     except requests.exceptions.MissingSchema:
         print(f'short url seams to be invalid {shorturl}')
     except ValueError:
