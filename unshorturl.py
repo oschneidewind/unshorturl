@@ -46,7 +46,7 @@ def unshorturl(shorturl: str, recursive: bool = False):
         http.HTTPStatus.PERMANENT_REDIRECT,     # Status Code 308
     ]
 
-    longurl = "No short Url found"
+    longurl = None
     with requests.session() as session:
         response = session.head(shorturl)
         if recursive:
@@ -55,6 +55,8 @@ def unshorturl(shorturl: str, recursive: bool = False):
                 response = session.head(longurl)
         elif response.status_code in allowed_status:
             longurl = response.headers.get('Location')
+    if not longurl:
+        raise ValueError
     return longurl
 
 
@@ -82,3 +84,5 @@ if __name__ == "__main__":
         print(f'the longurl is: {longurl}')
     except requests.exceptions.MissingSchema:
         print(f'short url seams to be invalid {shorturl}')
+    except ValueError:
+        print(f"{shorturl} seams not to be a short url")
