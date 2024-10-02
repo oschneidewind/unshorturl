@@ -18,7 +18,6 @@
 # -*- coding: utf-8 -*-
 import argparse
 import http
-import sys
 import requests
 
 
