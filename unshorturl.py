@@ -19,10 +19,11 @@
 import argparse
 import http
 import json
+import typing
 import requests
 
 
-def unshorturl(shorturl: str, recursive: bool = False):
+def unshorturl(shorturl: str, recursive: bool = False) -> str:
     '''
     Spam mails ofen contain urls which should be concealed with a shortner url
     service. Fortunately, most shortened URLs work by naming the correct URL as
@@ -60,7 +61,7 @@ def unshorturl(shorturl: str, recursive: bool = False):
     return longurl
 
 
-def cmdparse(args=None):
+def cmdparse(args: typing.List[str] | None = None) -> argparse.Namespace:
     '''
     function to parse the command line options
     '''
